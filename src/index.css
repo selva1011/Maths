@@ -304,25 +304,25 @@ kbd { padding: 3px 6px; border: 1px solid #e0e5df; border-radius: 4px; color: #6
 }
 
 .challenge-active {
-  height: 100vh;
-  height: 100dvh;
-  min-height: 0;
-  overflow: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: auto;
+  overflow: visible;
 }
 .challenge-active .topbar {
   flex: 0 0 64px;
   height: 64px;
 }
 .challenge-active .main-content {
-  display: flex;
-  flex: 1 1 auto;
+  display: block;
+  flex: 1 0 auto;
+  width: min(calc(100% - 64px), 760px);
   min-height: 0;
-  align-items: center;
   margin: 0 auto;
-  padding: 10px 0;
+  padding: clamp(18px, 4vh, 42px) 0 34px;
 }
 .challenge-active .site-footer { display: none; }
-.challenge-active .practice-wrap { max-height: 100%; }
+.challenge-active .practice-wrap { width: 100%; }
 .challenge-active .challenge-timer {
   display: inline-flex;
   align-items: center;
@@ -343,30 +343,21 @@ kbd { padding: 3px 6px; border: 1px solid #e0e5df; border-radius: 4px; color: #6
   stroke-width: 1.5;
 }
 .challenge-active .exit-button { margin-left: 8px; }
-.challenge-active .question-card { margin-top: 20px; }
+.challenge-active .question-card { margin-top: 24px; }
 
 @media (max-width: 640px) {
   .challenge-active .topbar { flex-basis: 58px; height: 58px; }
-  .challenge-active .main-content { width: calc(100% - 32px); padding: 8px 0; }
-  .challenge-active .practice-content { padding-top: 8px; }
+  .challenge-active .main-content { width: calc(100% - 32px); padding: 12px 0 24px; }
   .challenge-active .progress-info { margin-top: 17px; }
-  .challenge-active .question-card { margin-top: 16px; }
+  .challenge-active .question-card { margin-top: 18px; padding: 30px 22px 26px; }
+  .challenge-active .math-expression { min-height: 84px; margin: 8px 0 19px; }
+  .challenge-active .answer-field input { height: 56px; }
+  .challenge-active .submit-button, .challenge-active .next-button { min-height: 48px; }
   .challenge-active .session-stats { margin: 17px 0 14px; }
 }
 
-@media (max-height: 700px) {
-  .challenge-active .topbar { flex-basis: 52px; height: 52px; }
-  .challenge-active .main-content { padding-top: 5px; padding-bottom: 5px; }
-  .challenge-active .progress-info { margin-top: 12px; }
-  .challenge-active .question-card { margin-top: 12px; padding: 19px 30px 18px; }
-  .challenge-active .math-expression { min-height: 68px; margin: 3px 0 13px; font-size: clamp(36px, 7vw, 48px); }
-  .challenge-active .answer-field input { height: 47px; }
-  .challenge-active .submit-button { min-height: 40px; margin-top: 9px; }
-  .challenge-active .session-stats { margin: 13px 0 10px; }
-}
-
-@media (max-width: 380px) and (max-height: 700px) {
-  .challenge-active .question-card { padding: 16px 15px; }
+@media (max-width: 380px) {
+  .challenge-active .question-card { padding: 25px 16px 22px; }
   .challenge-active .feedback-message { flex-direction: row; align-items: center; }
   .challenge-active .next-button { width: auto; }
 }
@@ -506,7 +497,7 @@ kbd { padding: 3px 6px; border: 1px solid #e0e5df; border-radius: 4px; color: #6
 
 @media (max-width: 760px) {
   .topbar-actions { gap: 10px; }
-  .topbar-note { display: none; }
+  .dashboard-active .topbar-note { display: none; }
   .dashboard-active .main-content.dashboard-main { width: calc(100% - 40px); padding: 30px 0 38px; }
   .dashboard-grid { grid-template-columns: 1fr; }
   .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -514,6 +505,7 @@ kbd { padding: 3px 6px; border: 1px solid #e0e5df; border-radius: 4px; color: #6
   .dashboard-panel { padding: 19px; }
 }
 @media (max-width: 520px) {
+  .topbar-note { display: none; }
   .dashboard-nav-button { width: 36px; min-height: 36px; justify-content: center; padding: 0; }
   .dashboard-nav-button > span { display: none; }
   .dashboard-intro { align-items: flex-start; flex-direction: column; gap: 14px; }

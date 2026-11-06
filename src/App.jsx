@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import Dashboard from './components/Dashboard/Dashboard.jsx'
 import LevelSelection from './components/LevelSelection.jsx'
 import MarksSelection from './components/MarksSelection.jsx'
@@ -49,20 +49,6 @@ export default function App() {
   const [dashboardReturnScreen, setDashboardReturnScreen] = useState('marks')
   const savedSessionRef = useRef(null)
   const challengeTimer = useChallengeTimer()
-
-  useEffect(() => {
-    if (screen !== 'practice') return undefined
-
-    const previousHtmlOverflow = document.documentElement.style.overflow
-    const previousBodyOverflow = document.body.style.overflow
-    document.documentElement.style.overflow = 'hidden'
-    document.body.style.overflow = 'hidden'
-
-    return () => {
-      document.documentElement.style.overflow = previousHtmlOverflow
-      document.body.style.overflow = previousBodyOverflow
-    }
-  }, [screen])
 
   function registerParticipant(name) {
     try {
