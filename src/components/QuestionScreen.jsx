@@ -13,6 +13,7 @@ export default function QuestionScreen({
   onNext,
   onExit,
   elapsedMs,
+  isVisible = true,
 }) {
   const [answer, setAnswer] = useState('')
   const [feedback, setFeedback] = useState(null)
@@ -25,8 +26,8 @@ export default function QuestionScreen({
 
   useLayoutEffect(() => {
     transitioningRef.current = false
-    inputRef.current?.focus()
-  }, [questionIndex])
+    if (isVisible) inputRef.current?.focus()
+  }, [questionIndex, isVisible])
 
   function submitAnswer() {
     if (feedbackRef.current || transitioningRef.current || answer.trim() === '') return

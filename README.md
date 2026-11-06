@@ -29,15 +29,21 @@ Open the local URL printed by Vite to use the app.
 
 The challenge timer continues while you answer questions. Use the exit button to leave a challenge and return to difficulty selection.
 
+## Dashboard and local data
+
+On first use, choose a display name or nickname. The app creates a participant ID and saves the name, basic device/browser information, and completed challenge results in this browser’s `localStorage`. The Dashboard shows your performance and Easy, Medium, and Hard leaderboards based on saved results.
+
+Leaderboard data is local to this browser and device. It is not shared across browsers or devices and is not a global leaderboard. Clearing browser storage removes the participant profile and challenge history.
+
 ## Project structure
 
 ```text
 src/
-  components/   Selection, question, progress, and results UI
+  components/   Selection, question, results, setup, and dashboard UI
   hooks/        Reusable challenge timer
-  utils/        Arithmetic question generation
+  utils/        Question generation, participant, storage, and ranking logic
   App.jsx       Session flow and state
   index.css     Styling and responsive layouts
 ```
 
-The app runs entirely in the browser and does not use a backend or store personal information.
+The app runs entirely in the browser and does not use a backend.
