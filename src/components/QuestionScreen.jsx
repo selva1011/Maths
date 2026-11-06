@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import ProgressBar from './ProgressBar.jsx'
 import { formatElapsedTime } from '../hooks/useChallengeTimer.js'
 
@@ -17,27 +17,16 @@ export default function QuestionScreen({
   const [answer, setAnswer] = useState('')
   const [feedback, setFeedback] = useState(null)
   const inputRef = useRef(null)
-  const nextButtonRef = useRef(null)
   const feedbackRef = useRef(null)
   const transitioningRef = useRef(false)
   const question = questions[questionIndex]
   const answered = correct + incorrect
   const progress = Math.round((answered / questions.length) * 100)
 
-  useEffect(() => {
-    setAnswer('')
-    setFeedback(null)
-    feedbackRef.current = null
+  useLayoutEffect(() => {
     transitioningRef.current = false
+    inputRef.current?.focus()
   }, [questionIndex])
-
-  useEffect(() => {
-    if (feedback === null) inputRef.current?.focus()
-  }, [questionIndex, feedback])
-
-  useEffect(() => {
-    if (feedback) nextButtonRef.current?.focus()
-  }, [feedback])
 
   function submitAnswer() {
     if (feedbackRef.current || transitioningRef.current || answer.trim() === '') return
@@ -47,11 +36,16 @@ export default function QuestionScreen({
     feedbackRef.current = result
     setFeedback(result)
     onAnswer(isCorrect)
+    inputRef.current?.focus()
   }
 
   function advanceQuestion() {
     if (!feedbackRef.current || transitioningRef.current) return
     transitioningRef.current = true
+    setAnswer('')
+    setFeedback(null)
+    feedbackRef.current = null
+    inputRef.current?.focus()
     onNext()
   }
 
@@ -99,13 +93,17 @@ export default function QuestionScreen({
             <input
               ref={inputRef}
               id="answer"
-              type="number"
+              type="text"
               inputMode="numeric"
-              step="any"
+              pattern="[0-9]*"
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
               value={answer}
-              onChange={(event) => setAnswer(event.target.value)}
+              onChange={(event) => {
+                if (!feedbackRef.current) setAnswer(event.target.value)
+              }}
               placeholder="Type a number"
-              disabled={Boolean(feedback)}
               required
               aria-describedby={feedback ? 'answer-feedback' : undefined}
             />
@@ -123,12 +121,28 @@ export default function QuestionScreen({
               role="status"
             >
               <span>{feedback.isCorrect ? 'Nicely done!' : `Not quite — the answer is ${feedback.correctAnswer}.`}</span>
-              <button ref={nextButtonRef} className="primary-button next-button" type="button" onClick={advanceQuestion}>
+              <button
+                className="primary-button next-button"
+                type="button"
+                onPointerDown={(event) => {
+                  event.preventDefault()
+                  inputRef.current?.focus()
+                }}
+                onClick={advanceQuestion}
+              >
                 {questionIndex + 1 === questions.length ? 'See my results' : 'Next question'} <span aria-hidden="true">→</span>
               </button>
             </div>
           ) : (
-            <button className="primary-button submit-button" type="submit" disabled={!answer.trim()}>
+            <button
+              className="primary-button submit-button"
+              type="submit"
+              disabled={!answer.trim()}
+              onPointerDown={(event) => {
+                event.preventDefault()
+                inputRef.current?.focus()
+              }}
+            >
               Check answer <span aria-hidden="true">→</span>
             </button>
           )}
