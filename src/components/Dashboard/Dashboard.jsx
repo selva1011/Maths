@@ -2,7 +2,7 @@ import Leaderboard from './Leaderboard.jsx'
 import ParticipantStats from './ParticipantStats.jsx'
 import { getDashboardSummary, getParticipantStats } from '../../utils/leaderboard.js'
 
-export default function Dashboard({ participant, results, onReturn }) {
+export default function Dashboard({ participant, results, onReturn, onOpenMemory }) {
   const summary = getDashboardSummary(results, participant)
   const personalStats = getParticipantStats(results, participant.id)
 
@@ -25,6 +25,16 @@ export default function Dashboard({ participant, results, onReturn }) {
         <SummaryCard label="Correct answers" value={summary.correctAnswers} icon="✓" />
         <SummaryCard label="Average accuracy" value={`${summary.averageAccuracy}%`} icon="◔" />
       </div>
+
+      <button className="dashboard-memory-entry" type="button" onClick={onOpenMemory}>
+        <span className="dashboard-memory-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path d="M9.8 3.2a3 3 0 0 0-5.6 1.3A3.2 3.2 0 0 0 3 10a3.2 3.2 0 0 0 2.1 5.5 3 3 0 0 0 4.7 1.3m.4-13.6a3 3 0 0 1 5.6 1.3A3.2 3.2 0 0 1 17 10a3.2 3.2 0 0 1-2.1 5.5 3 3 0 0 1-4.7 1.3M10 3v14M5.2 8.2h2m5.4 3.6h2.2" />
+          </svg>
+        </span>
+        <span><strong>Try Memory Training</strong><small>Sentence, word-order, missing-word, and sequence exercises</small></span>
+        <span className="dashboard-memory-arrow" aria-hidden="true">→</span>
+      </button>
 
       <div className="dashboard-grid">
         <Leaderboard results={results} />

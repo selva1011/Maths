@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import Dashboard from './components/Dashboard/Dashboard.jsx'
 import LevelSelection from './components/LevelSelection.jsx'
 import MarksSelection from './components/MarksSelection.jsx'
+import MemoryModule from './components/Memory/MemoryModule.jsx'
 import ParticipantSetup from './components/ParticipantSetup.jsx'
 import QuestionScreen from './components/QuestionScreen.jsx'
 import ResultScreen from './components/ResultScreen.jsx'
@@ -47,6 +48,7 @@ export default function App() {
   const [sessionNumber, setSessionNumber] = useState(0)
   const [totalTimeMs, setTotalTimeMs] = useState(0)
   const [dashboardReturnScreen, setDashboardReturnScreen] = useState('marks')
+  const [memoryReturnScreen, setMemoryReturnScreen] = useState('marks')
   const savedSessionRef = useRef(null)
   const challengeTimer = useChallengeTimer()
 
@@ -144,6 +146,15 @@ export default function App() {
     setScreen(dashboardReturnScreen)
   }
 
+  function openMemory() {
+    setMemoryReturnScreen(screen)
+    setScreen('memory')
+  }
+
+  function returnToMaths() {
+    setScreen(memoryReturnScreen)
+  }
+
   function goHome() {
     if (screen === 'practice' || (screen === 'dashboard' && dashboardReturnScreen === 'practice')) {
       challengeTimer.stop()
@@ -157,7 +168,7 @@ export default function App() {
     || (screen === 'dashboard' && dashboardReturnScreen === 'practice')
 
   return (
-    <main className={`app-shell ${screen === 'practice' ? 'challenge-active' : ''} ${screen === 'dashboard' ? 'dashboard-active' : ''}`}>
+    <main className={`app-shell ${screen === 'practice' ? 'challenge-active' : ''} ${screen === 'dashboard' ? 'dashboard-active' : ''} ${screen === 'memory' ? 'memory-active' : ''}`}>
       <header className="topbar">
         <a
           href="#home"
@@ -173,7 +184,7 @@ export default function App() {
         </a>
         <div className="topbar-actions">
           <span className="topbar-note">A little practice goes a long way <span aria-hidden="true">✦</span></span>
-          {participant && (
+          {participant && screen !== 'memory' && (
             <button
               className={`dashboard-nav-button ${screen === 'dashboard' ? 'selected' : ''}`}
               type="button"
@@ -190,10 +201,24 @@ export default function App() {
               <span>{screen === 'dashboard' ? 'Back' : 'Dashboard'}</span>
             </button>
           )}
+          {participant && screen !== 'practice' && !(screen === 'dashboard' && dashboardReturnScreen === 'practice') && (
+            <button
+              className={`memory-nav-button ${screen === 'memory' ? 'selected' : ''}`}
+              type="button"
+              onClick={screen === 'memory' ? returnToMaths : openMemory}
+              aria-label={screen === 'memory' ? 'Return to maths challenge' : 'Open memory training'}
+              title={screen === 'memory' ? 'Maths Challenge' : 'Memory Training'}
+            >
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M9.8 3.2a3 3 0 0 0-5.6 1.3A3.2 3.2 0 0 0 3 10a3.2 3.2 0 0 0 2.1 5.5 3 3 0 0 0 4.7 1.3m.4-13.6a3 3 0 0 1 5.6 1.3A3.2 3.2 0 0 1 17 10a3.2 3.2 0 0 1-2.1 5.5 3 3 0 0 1-4.7 1.3M10 3v14M5.2 8.2h2m5.4 3.6h2.2" />
+              </svg>
+              <span>{screen === 'memory' ? 'Maths' : 'Memory'}</span>
+            </button>
+          )}
         </div>
       </header>
 
-      <div className={`main-content ${screen === 'practice' ? 'practice-content' : ''} ${screen === 'dashboard' ? 'dashboard-main' : ''}`}>
+      <div className={`main-content ${screen === 'practice' ? 'practice-content' : ''} ${screen === 'dashboard' ? 'dashboard-main' : ''} ${screen === 'memory' ? 'memory-main' : ''}`}>
         {screen === 'setup' && <ParticipantSetup onCreate={registerParticipant} error={storageError} />}
         {screen === 'marks' && <MarksSelection onSelect={chooseMarks} />}
         {screen === 'difficulty' && (
@@ -230,7 +255,10 @@ export default function App() {
           />
         )}
         {screen === 'dashboard' && participant && (
-          <Dashboard participant={participant} results={results} onReturn={returnFromDashboard} />
+          <Dashboard participant={participant} results={results} onReturn={returnFromDashboard} onOpenMemory={openMemory} />
+        )}
+        {screen === 'memory' && (
+          <MemoryModule participantId={participant?.id} onBack={returnToMaths} />
         )}
         {storageError && screen !== 'setup' && (
           <p className="storage-notice" role="status">{storageError}</p>
